@@ -1,0 +1,11 @@
+.wrapper {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.scramble {
+  font-size: 32px;
+  font-weight: 600;
+}

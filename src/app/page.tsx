@@ -1,3 +1,12 @@
+import classes from './page.module.css';
+import Scramble from '@/features/scramble/Scramble';
+import Timer from '@/features/timer/Timer';
+
 export default function Home() {
-  return <h1>Hello world</h1>;
+  return (
+    <div className={classes.wrapper}>
+      <Scramble />
+      <Timer />
+    </div>
+  );
 }
