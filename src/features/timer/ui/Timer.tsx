@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import classes from './Timer.module.css';
 
-export default function Timer() {
+export function Timer() {
   const [time, setTime] = useState('00:00:00');
 
   const isHolding = useRef(false);

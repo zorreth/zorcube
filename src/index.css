@@ -9,7 +9,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: var(--font-roboto-mono);
+  font-family: 'Roboto Mono Variable', monospace;
 }
 
 body {
