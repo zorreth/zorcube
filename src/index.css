@@ -1,8 +1,10 @@
 :root {
   --color-white: hsl(0, 0%, 100%);
 
-  --color-gray-950: hsl(200, 10%, 5%);
-  --color-gray-900: hsl(200, 10%, 10%);
+  --color-bg: hsl(200, 10%, 5%);
+
+  --color-timer-ready: hsl(100, 50%, 70%);
+  --color-timer-running: hsl(100, 50%, 50%);
 }
 
 * {
@@ -13,6 +15,6 @@
 }
 
 body {
-  background-color: var(--color-gray-950);
+  background-color: var(--color-bg);
   color: var(--color-white);
 }

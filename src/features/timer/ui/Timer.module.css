@@ -9,3 +9,11 @@
   font-size: 64px;
   font-weight: 600;
 }
+
+.ready {
+  color: var(--color-timer-ready);
+}
+
+.running {
+  color: var(--color-timer-running);
+}
