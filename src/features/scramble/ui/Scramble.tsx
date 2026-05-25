@@ -1,5 +1,3 @@
-'use client';
-
 import classes from './Scramble.module.css';
 import { useEffect, useState } from 'react';
 import { generateScramble } from '../lib/scramble';
@@ -20,10 +18,5 @@ export function Scramble() {
     return () => document.removeEventListener('keydown', regenerate);
   }, []);
 
-  return (
-    <div className={classes.wrapper}>
-      <span className={classes.scramble}>{scramble}</span>
-      <span className={classes.regenerate}>press R to regenerate scramble</span>
-    </div>
-  );
+  return <span className={classes.scramble}>{scramble}</span>;
 }
