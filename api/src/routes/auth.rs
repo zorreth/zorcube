@@ -4,11 +4,7 @@ use std::{
     time::{SystemTime, UNIX_EPOCH},
 };
 
-use axum::{
-    extract::{Query, State},
-    response::{IntoResponse, Redirect, Response},
-};
-use axum_extra::extract::{CookieJar, cookie::Cookie};
+use actix_web::{HttpRequest, HttpResponse, Responder, cookie::Cookie, get, http::header, web};
 use jsonwebtoken::{EncodingKey, Header, encode};
 use oauth2::{AuthorizationCode, CsrfToken, Scope, TokenResponse};
 use serde::Deserialize;
@@ -29,7 +25,8 @@ pub struct GoogleUser {
     picture: String,
 }
 
-pub async fn google_login(State(state): State<AppState>) -> impl IntoResponse {
+#[get("/auth/google")]
+pub async fn google_login(state: web::Data<AppState>) -> impl Responder {
     let (auth_url, csrf_token) = state
         .oauth_client
         .authorize_url(CsrfToken::new_random)
@@ -40,27 +37,28 @@ pub async fn google_login(State(state): State<AppState>) -> impl IntoResponse {
         ])
         .url();
 
-    let cookie = Cookie::build(("oauth_csrf", csrf_token.secret()))
+    let cookie = Cookie::build("oauth_csrf", csrf_token.secret())
         .http_only(true)
-        .build();
+        .finish();
 
-    (
-        [(axum::http::header::SET_COOKIE, cookie.to_string())],
-        Redirect::to(auth_url.as_str()),
-    )
+    HttpResponse::Found()
+        .append_header((header::LOCATION, auth_url.as_str()))
+        .cookie(cookie)
+        .finish()
 }
 
+#[get("/auth/google/callback")]
 pub async fn google_callback(
-    State(state): State<AppState>,
-    Query(query): Query<AuthQuery>,
-    jar: CookieJar,
-) -> Response {
-    let Some(csrf_cookie) = jar.get("oauth_csrf") else {
-        return "Missing CSRF cookie".into_response();
+    state: web::Data<AppState>,
+    query: web::Query<AuthQuery>,
+    req: HttpRequest,
+) -> impl Responder {
+    let Some(csrf_cookie) = req.cookie("oauth_csrf") else {
+        return HttpResponse::Ok().body("Missing CSRF cookie");
     };
 
     if csrf_cookie.value() != query.state {
-        return "Invalid CSRF token".into_response();
+        return HttpResponse::Ok().body("Invalid CSRF token");
     }
 
     let http_client = reqwest::ClientBuilder::new()
@@ -70,7 +68,7 @@ pub async fn google_callback(
 
     let token_response = state
         .oauth_client
-        .exchange_code(AuthorizationCode::new(query.code))
+        .exchange_code(AuthorizationCode::new(query.code.clone()))
         .request_async(&http_client)
         .await
         .unwrap();
@@ -125,14 +123,13 @@ pub async fn google_callback(
     )
     .unwrap();
 
-    let cookie = Cookie::build(("session", token)).http_only(true).build();
+    let cookie = Cookie::build("session", token).http_only(true).finish();
 
     let redirect_url = env::var("OAUTH_SUCCESS_REDIRECT_URL")
         .expect("OAUTH_SUCCESS_REDIRECT_URL is missing in your env");
 
-    (
-        [(axum::http::header::SET_COOKIE, cookie.to_string())],
-        Redirect::to(&redirect_url),
-    )
-        .into_response()
+    HttpResponse::Found()
+        .append_header((header::LOCATION, redirect_url))
+        .cookie(cookie)
+        .finish()
 }

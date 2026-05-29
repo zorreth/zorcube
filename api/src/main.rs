@@ -1,6 +1,6 @@
 use std::env;
 
-use axum::{Router, routing::get};
+use actix_web::{App, HttpServer, web};
 use oauth2::{AuthUrl, ClientId, ClientSecret, EndpointNotSet, EndpointSet, RedirectUrl, TokenUrl};
 use sqlx::{PgPool, postgres::PgPoolOptions};
 
@@ -20,8 +20,8 @@ struct AppState {
     oauth_client: BasicClient,
 }
 
-#[tokio::main]
-async fn main() {
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
     dotenvy::dotenv().unwrap();
 
     let db = connect_db().await.unwrap();
@@ -31,15 +31,17 @@ async fn main() {
 
     let state = AppState { db, oauth_client };
 
-    let app = Router::new()
-        .route("/auth/google", get(routes::auth::google_login))
-        .route("/auth/google/callback", get(routes::auth::google_callback))
-        .with_state(state);
-
     println!("Starting server at port 3000");
 
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
-    axum::serve(listener, app).await.unwrap();
+    HttpServer::new(move || {
+        App::new()
+            .app_data(web::Data::new(state.clone()))
+            .service(routes::auth::google_login)
+            .service(routes::auth::google_callback)
+    })
+    .bind(("127.0.0.1", 3000))?
+    .run()
+    .await
 }
 
 async fn connect_db() -> Result<PgPool, sqlx::error::Error> {
