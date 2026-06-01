@@ -9,7 +9,7 @@ const robotoMono = Roboto_Mono({
 
 export const metadata: Metadata = {
   title: 'Zorcube',
-  description: 'Speedcubing timer, platform & progress tracker by zorreth.',
+  description: 'Speedcubing timer, platform & progress tracker by zorreth',
 };
 
 export default function RootLayout({

@@ -1,3 +1,10 @@
+import classes from './page.module.scss';
+import { Scramble } from '@/features/scramble';
+
 export default function Home() {
-  return <div>Home</div>;
+  return (
+    <main className={classes.main}>
+      <Scramble />
+    </main>
+  );
 }
