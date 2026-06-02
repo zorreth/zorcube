@@ -1,0 +1,35 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 32px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 240px;
+}
+
+.buttons > * {
+  width: 100%;
+}
+
+.back {
+  color: var(--color-white);
+  opacity: 0.8;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.back:hover {
+  opacity: 1;
+}

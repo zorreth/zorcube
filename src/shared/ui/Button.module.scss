@@ -1,0 +1,24 @@
+.button {
+  background: transparent;
+  border: 1px solid var(--color-white);
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: opacity 0.15s;
+  opacity: 0.8;
+  border-radius: 4px;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+}

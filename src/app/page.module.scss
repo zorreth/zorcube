@@ -1,3 +1,10 @@
+.nav {
+  position: fixed;
+  top: 0;
+  right: 0;
+  padding: 24px;
+}
+
 .main {
   display: flex;
   flex-direction: column;
