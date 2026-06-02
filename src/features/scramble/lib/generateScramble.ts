@@ -1,4 +1,4 @@
-const FACES = ['L', 'R', 'F', 'B', 'T', 'D'];
+const FACES = ['L', 'R', 'F', 'B', 'U', 'D'];
 const SUFFIXES = ['', '2', "'"];
 
 export function generateScramble(size = 20): string {
