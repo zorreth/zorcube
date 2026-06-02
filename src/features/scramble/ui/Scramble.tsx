@@ -13,8 +13,15 @@ export function Scramble() {
       if (e.code === 'KeyR') setScramble(generateScramble());
     };
 
+    const regenerateOnStop = () => setScramble(generateScramble());
+
     document.addEventListener('keydown', regenerate);
-    return () => document.removeEventListener('keydown', regenerate);
+    document.addEventListener('timer-stop', regenerateOnStop);
+    
+    return () => {
+      document.removeEventListener('keydown', regenerate);
+      document.removeEventListener('timer-stop', regenerateOnStop);
+    };
   }, []);
 
   return (

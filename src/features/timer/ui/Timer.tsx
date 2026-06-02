@@ -46,6 +46,7 @@ export function Timer() {
 
       clearInterval(timerInterval.current);
       setTimerState('idle');
+      document.dispatchEvent(new CustomEvent('timer-stop'));
     };
 
     const onKeyDown = (e: KeyboardEvent) => {
